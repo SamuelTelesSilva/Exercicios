@@ -1,27 +1,49 @@
 import React, {Component} from 'react';
-
-import UserInput from './UserInput/UserInput';
-import UserOutput from './UserOutput/UserOutput';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component{
+ 
   state = {
-    username: 'username'
+    userInput: ''
   }
 
-  usernameChangeHandler = (event) => {
-    this.setState({username: event.target.value});
+  inputChangedHandler = (event) => {
+    this.setState({userInput: event.target.value});
+  }
+
+  deleteCharHandler = ( index ) => {
+    const text = this.state.userInput.split('');
+    text.slice(index, 1);
+    const updatedText = text.join('');
+    this.setState({userInput: updatedText});
   }
 
   render(){
+    const charList = this.state.userInput.split('').map( (ch, index) => {
+      return <Char 
+        character={ch} 
+        key={index} 
+        clicked={() => this.deleteCharHandler(index)}/>;
+    });
+
     return (
-      <div className="App" currentName={this.state.username}>
-        <UserInput  changed={this.usernameChangeHandler}/>
-        <UserOutput userName={this.state.username}/>
-        <UserOutput userName={this.state.username}/>
-        <UserOutput userName={this.state.username}/>
+      <div className="App">
+        <input type="text" onChange={this.inputChangedHandler} value={this.state.userInput}/>
+        <p>{this.state.userInput}</p>
+        <Validation inputLength={this.state.userInput.length}/>
+        {charList}
       </div>
     );
   }
 }
 
 export default App;
+
+
+/* 
+  Anotações:
+
+  inputLength={this.state.userInput.length}/> pegando o tamanho da string dentro do input, e enviando como props
+
+*/
